@@ -3,11 +3,15 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.schemas.account import AccountCreate, AccountUpdate, AccountResponse
 from app.services import account_service
+from app.core.dependencies import get_current_user
 
 router = APIRouter(prefix="/accounts", tags=["Accounts"])
 
 @router.get("/", response_model=list[AccountResponse])
-def get_accounts(db: Session = Depends(get_db)):
+def get_accounts(
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_user)
+):
     return account_service.get_accounts(db)
 
 @router.get("/{account_id}", response_model=AccountResponse)

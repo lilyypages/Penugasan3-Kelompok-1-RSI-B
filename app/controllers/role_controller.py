@@ -3,11 +3,15 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.schemas.role import RoleCreate, RoleUpdate, RoleResponse
 from app.services import role_service
+from app.core.dependencies import get_current_user
 
 router = APIRouter(prefix="/roles", tags=["Roles"])
 
 @router.get("/", response_model=list[RoleResponse], summary="Get all roles")
-def get_roles(db: Session = Depends(get_db)):
+def get_roles(
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_user)
+):
     return role_service.get_roles(db)
 
 @router.get("/{role_id}", response_model=RoleResponse, summary="Get roles by ID")

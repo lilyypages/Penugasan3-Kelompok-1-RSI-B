@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from app.models import Account
 from app.repositories import user_repository, role_repository
+from app.utils.security.hash import hash_password
 
 def get_accounts(db: Session):
     return db.query(Account).all()
@@ -25,7 +26,7 @@ def create_account(db: Session, data):
         role_id=role.id,
         email=data.email,
         username=data.username,
-        password=data.password  # You should hash in real app
+        password=hash_password(data.password)  # Hash the password before storing
     )
 
     db.add(account)
