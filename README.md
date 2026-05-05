@@ -23,7 +23,7 @@ Repositori ini berisi pengembangan lanjutan dari sistem backend dengan fokus pad
 ### 🔐 1. Implementasi Hashing Password
 Keamanan data pengguna menjadi prioritas utama:
 - Password tidak disimpan dalam bentuk *plain text*.
-- Menggunakan library **bcrypt** atau **passlib** untuk proses hashing.
+- Menggunakan library **argon2** untuk proses hashing.
 - Hashing dilakukan secara otomatis pada saat registrasi pengguna baru.
 
 ### 🔑 2. Endpoint Login & JWT Authentication
