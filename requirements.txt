@@ -1,1 +1,6 @@
-pip install passlib[argon2]
+passlib[argon2]
+PyJWT
+fastapi
+sqlalchemy
+uvicorn
+python-multipart

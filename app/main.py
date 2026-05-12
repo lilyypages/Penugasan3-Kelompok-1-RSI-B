@@ -5,6 +5,8 @@ from app.controllers.account_controller import router as account_router
 from app.controllers.event_controller import router as event_router
 from app.controllers.registration_controller import router as registration_router
 from app.controllers import auth_controller
+from app.database import Base, engine 
+Base.metadata.create_all(bind=engine)  
 
 app = FastAPI()
 
