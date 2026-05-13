@@ -45,27 +45,34 @@ def login_json(data: LoginJsonRequest, db: Session = Depends(get_db)):
 
 @router.post("/register", response_model=RegisterResponse)
 def register(data: RegisterRequest, db: Session = Depends(get_db)):
-    existing = db.query(Account).filter(
-        (Account.email == data.email) | (Account.username == data.username)
-    ).first()
-    if existing:
-        raise HTTPException(status_code=400, detail="Username atau email sudah digunakan")
+    try:
+        existing = db.query(Account).filter(
+            (Account.email == data.email) | (Account.username == data.username)
+        ).first()
+        if existing:
+            raise HTTPException(status_code=400, detail="Username atau email sudah digunakan")
 
-    from app.schemas.user import UserCreate
-    user_data = UserCreate(first_name=data.username, last_name="", whatsapp="")
-    user = user_service.create_user(db, user_data)
+        from app.schemas.user import UserCreate
+        user_data = UserCreate(first_name=data.username, last_name="", whatsapp="")
+        user = user_service.create_user(db, user_data)
 
-    from app.schemas.account import AccountCreate
-    from app.utils.security.hash import hash_password
-    account = Account(
-        user_id=user.id,
-        role_id=2,
-        email=data.email,
-        username=data.username,
-        password=hash_password(data.password)
-    )
-    db.add(account)
-    db.commit()
-    db.refresh(account)
+        from app.utils.security.hash import hash_password
+        account = Account(
+            user_id=user.id,
+            role_id=2,
+            email=data.email,
+            username=data.username,
+            password=hash_password(data.password)
+        )
+        db.add(account)
+        db.commit()
+        db.refresh(account)
 
-    return {"message": "Registrasi berhasil"}
+        return {"message": "Registrasi berhasil"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"REGISTER ERROR: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))

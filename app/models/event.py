@@ -9,3 +9,5 @@ class Event(Base):
     title = Column(String, nullable=False)
     description = Column(String)
     date = Column(DateTime, default=datetime.utcnow)
+    lokasi = Column(String, nullable=False, default="")
+    kuota = Column(Integer, nullable=False, default=0)
